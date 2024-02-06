@@ -2,10 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Habit from './components/Habit';
+import Habit from '../components/Habit';
 
 
-export default function Home() {
+const HomeScreen = () => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
       <Text style = {styles.mainHeading}>Hello, {username}!</Text>
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   pendingTasksContainer: {
     paddingTop: 100,
     paddingHorizontal: 20,
+    paddingBottom: 100,
   },
   taskHeading: {
     fontSize: 24,
@@ -52,3 +53,5 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
 });
+
+export default HomeScreen;

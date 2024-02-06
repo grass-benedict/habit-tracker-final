@@ -3,6 +3,8 @@ import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-nati
 import { NavigationContainer } from '@react-navigation/native';
 //import { Button, Overlay } from 'react-native-elements';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+
 import { Entypo } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons'; 
@@ -10,96 +12,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import Habit from './components/Habit'; 
 
-function HomeScreen() {
-  return (
-<ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
-      <Text style = {styles.mainHeading}>Hello, {username}!</Text>
-      <View style={styles.pendingTasksContainer}>
-        <Text style = {styles.taskHeading}>Pending for today</Text>
+import CalendarScreen from './screens/CalendarScreen';
+import StatisticsScreen from './screens/StatisticsScreen';
+import NotificationScreen from './screens/NotificationScreen';
+import HomeScreen from './screens/HomeScreen';
+import AddScreen from './screens/AddScreen';
+import NewHabitScreen from './screens/NewHabitScreen';
 
-        <View style = {styles.pendingItems}>
-          <Habit text = "Go to bed early 🛏️"/>
-          <Habit text = "Meditate"/>
-          <Habit text = "Meditate"/>
-          <Habit text = "Meditate"/>
-          <Habit text = "Meditate"/>
-          <Habit text = "Meditate"/>
-          <Habit text = "Meditate"/>
-        </View>
-
-      </View>
-
-      <View style={styles.completedTasksContainer}>
-        <Text style = {styles.taskHeading}>Completed</Text>
-      </View>
-
-    </ScrollView>
-  
-  )
-}
-
-function CalendarScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-function StatisticsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Statistics!</Text>
-    </View>
-  );
-}
-
-function NotificationScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Notifications!</Text>
-    </View>
-  );
-}
-
-function AddScreen() {
-  return (
-    <View style = {styles.addScreenContainer}>
-    <Text style = {styles.addHabitHeading}>I would like to...</Text>
-    <View style = {styles.addHabitContainer}>
-
-      <TouchableOpacity style = {styles.addHabitButton}>
-        <View style = {styles.addHabitButtonTextContainer}>
-        <Text style = {styles.addHabitButtonHeading}>Establish a habit</Text>
-        <Text style = {styles.addHabitButtonInfoText}>Track your progress manually every day to build a positive habit.</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-
-    <View style = {styles.addAddictionContainer}>
-      <TouchableOpacity style = {styles.addAddictionButton} onPress = {AddAddictionScreen}>
-        <View style = {styles.addHabitButtonTextContainer}>
-        <Text style = {styles.addHabitButtonHeading}>Quit an addiction</Text>
-        <Text style = {styles.addHabitButtonInfoText}>Your progress will be tracked automatically to grow your streak, unless you reset it.</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
-    </View>
-
-  );
-}
-
-//Neues Habit hinzufügen
-function AddHabitScreen(){
-  return (
-    <Text>Hello!</Text>
-  )
-}
-
-//Neue Addiction hinzufügen
-function AddAddictionScreen(){
-
-}
 
 /*
 const UsernameOverlay = () => {
@@ -117,9 +36,12 @@ const UsernameOverlay = () => {
 */
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator(); 
+
 const screenOptions = {
   tabBarShowLabel: false,
   headerShown: false,
+  headerMode: "none",
   tabBarStyle: {
     position: 'absolute',
     bottom: 0,
@@ -132,14 +54,11 @@ const screenOptions = {
   }
 }
 
-export default function App() {
+const TabNavigator = () => {
+
   return (
-    <NavigationContainer>
 
-
-
-
-      <Tab.Navigator screenOptions = {screenOptions}>
+    <Tab.Navigator screenOptions = {screenOptions}>
         <Tab.Screen name="Home" 
         component={HomeScreen} 
         options = {{
@@ -163,7 +82,9 @@ export default function App() {
           }
         }}
          />
-        <Tab.Screen name="Add" 
+
+      
+       <Tab.Screen name="Add" 
         component={AddScreen}
         options = {{
           tabBarIcon: ({focused}) => {
@@ -217,6 +138,20 @@ export default function App() {
           }
         }} />
       </Tab.Navigator>
+  )
+
+}
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="TabNavigator"  screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="TabNavigator" component={TabNavigator}/>  
+      <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add' }} /> 
+      <Stack.Screen name="NewHabit" component={NewHabitScreen}/>   
+
+      </Stack.Navigator>
+      
     </NavigationContainer>
   );
 }
