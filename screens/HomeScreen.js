@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, ScrollView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,14 +7,20 @@ import Habit from '../components/Habit';
 
 
 const HomeScreen = ( { route } ) => {
-  //const [habitItems, setHabitItems] = useState([]);
+  const [pendingHabitItems, setPendingHabitItems] = useState([]);
+  const [completedHabitItems, setCompletedHabitItems] = useState([]);
 
-
-  /*
+  useEffect(() => {
+    //Wenn Parameter übergeben, erstelle neues Habit
+    if (route.params?.habit) {
+      addHabitToList();
+    }
+  }, [route.params?.habit]);
+ 
   const addHabitToList = () => {
-    const newHabit = route.params;
-    setHabitItems(prevHabits => [...prevHabits, newHabit]);
-  } */
+    const newHabit = route.params.habit;
+    setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, newHabit]);
+  } 
 
   const pendingHabits = ['Exercise', 'Read', 'Meditate'];
   const completedHabits = ['Code', 'Go for a walk'];
@@ -24,22 +30,10 @@ const HomeScreen = ( { route } ) => {
       <Text style = {styles.mainHeading}>Hello, {username}!</Text>
       <View style={styles.pendingTasksContainer}>
         <Text style = {styles.taskHeading}>Pending for today</Text>
-
-        <View style = {styles.pendingItems}>
         {
-          pendingHabits.map((habit, index) => (
+          pendingHabitItems.map((habit, index) => (
           <Habit key={index} text={habit} />
-          ))
-
-          }
-          {/*
-          <Habit text = "Go to bed early 🛏️"/>
-          <Habit text = "Meditate"/>
-          <Habit text = "Meditate"/> 
-        */}
-
-
-        </View>
+          ))}
 
       </View>
 

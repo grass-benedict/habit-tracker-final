@@ -7,7 +7,7 @@ const NewHabitScreen = ( { navigation } ) => {
     //const [items, setItems] = useState([]);
 
     const handleAddHabit = () => {
-        navigation.navigate('Home', name)
+        navigation.navigate('Home', {habit: name})
     }
 
 
