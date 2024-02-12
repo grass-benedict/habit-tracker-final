@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Habit from '../components/Habit';
 
 
-const HomeScreen = ( { route } ) => {
+const HomeScreen = ( { route, navigation } ) => {
   const [pendingHabitItems, setPendingHabitItems] = useState([]);
   const [completedHabitItems, setCompletedHabitItems] = useState([]);
 
@@ -14,6 +14,7 @@ const HomeScreen = ( { route } ) => {
     //Wenn Parameter übergeben, erstelle neues Habit
     if (route.params?.habit) {
       addHabitToList();
+      navigation.setParams({ habit: null });
     }
   }, [route.params?.habit]);
  
@@ -23,7 +24,7 @@ const HomeScreen = ( { route } ) => {
   } 
 
   const pendingHabits = ['Exercise', 'Read', 'Meditate'];
-  const completedHabits = ['Code', 'Go for a walk'];
+  const completedHabits = [];
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
@@ -37,14 +38,15 @@ const HomeScreen = ( { route } ) => {
 
       </View>
 
-
-      <View style={styles.completedTasksContainer}>
-      <Text style = {styles.taskHeading}>Completed</Text>   
-          {
-          completedHabits.map((habit, index) => (
-          <Habit key={index} text={habit} />
+            
+      {completedHabits.length > 0 && ( // Conditionally render the View if completedHabits is not empty
+        <View style={styles.completedTasksContainer}>
+          <Text style={styles.taskHeading}>Completed</Text>
+          {completedHabits.map((habit, index) => (
+            <Habit key={index} text={habit} />
           ))}
-      </View>
+        </View>
+      )}
 
       <StatusBar style="auto" />
     </ScrollView>
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
   pendingTasksContainer: {
     paddingTop: 100,
     paddingHorizontal: 20,
-    paddingBottom: 30,
+    paddingBottom: 100,
   },
   completedTasksContainer: {
     paddingHorizontal: 20,
