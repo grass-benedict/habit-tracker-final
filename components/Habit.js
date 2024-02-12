@@ -2,9 +2,13 @@ import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 const Habit = (props) => {
+    
+    //Destructuring the props object
+    const { text, onPress } = props;
+
     return (
         <View style = {styles.itemContainer}>
-            <TouchableOpacity style = {styles.itemBox}>
+            <TouchableOpacity style = {styles.itemBox} onPress = {onPress}>
                 <Text style = {styles.itemText}>{props.text}</Text>
             </TouchableOpacity>
 

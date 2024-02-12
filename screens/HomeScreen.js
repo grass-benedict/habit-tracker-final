@@ -23,8 +23,17 @@ const HomeScreen = ( { route, navigation } ) => {
     setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, newHabit]);
   } 
 
-  const pendingHabits = ['Exercise', 'Read', 'Meditate'];
-  const completedHabits = [];
+  const moveHabitToCompleted = (index) => {
+    const habitToMove = pendingHabitItems[index];
+    setPendingHabitItems(pendingHabitItems => pendingHabitItems.filter((_, i) => i !== index));
+    setCompletedHabitItems(completedHabitItems => [...completedHabitItems, habitToMove]);   
+  }
+
+  const moveHabitToPending = (index) => {
+    const habitToMove = completedHabitItems[index];
+    setCompletedHabitItems(completedHabitItems => completedHabitItems.filter((_, i) => i !== index));
+    setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, habitToMove]);  
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
@@ -33,17 +42,17 @@ const HomeScreen = ( { route, navigation } ) => {
         <Text style = {styles.taskHeading}>Pending for today</Text>
         {
           pendingHabitItems.map((habit, index) => (
-          <Habit key={index} text={habit} />
+          <Habit key={index} text={habit} onPress={() => moveHabitToCompleted(index)} />
           ))}
 
       </View>
 
             
-      {completedHabits.length > 0 && ( // Conditionally render the View if completedHabits is not empty
+      {completedHabitItems.length > 0 && ( // Conditionally render the View if completedHabits is not empty
         <View style={styles.completedTasksContainer}>
           <Text style={styles.taskHeading}>Completed</Text>
-          {completedHabits.map((habit, index) => (
-            <Habit key={index} text={habit} />
+          {completedHabitItems.map((habit, index) => (
+            <Habit key={index} text={habit} onPress={() => moveHabitToPending(index)} />
           ))}
         </View>
       )}
