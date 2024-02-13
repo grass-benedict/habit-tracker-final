@@ -1,14 +1,16 @@
 import React, {useState} from 'react'; 
 import {Text, View, TouchableOpacity, StyleSheet, TextInput} from 'react-native';
+import CheckBox from 'expo-checkbox';
 
 const NewHabitScreen = ( { navigation } ) => {
 
     const [name, setName] = useState();
-    //const [items, setItems] = useState([]);
+    const [isChecked, setChecked] = useState(false);
 
     const handleAddHabit = () => {
         navigation.navigate('Home', {habit: name})
     }
+
 
 
     return (
@@ -17,8 +19,13 @@ const NewHabitScreen = ( { navigation } ) => {
         <TextInput style = {styles.input} placeholder = "Enter habit name..." value = {name} onChangeText={text => setName(text)}></TextInput>
 
         <TouchableOpacity style = {styles.addButton} onPress = {() => handleAddHabit()}>
-        <Text>Add</Text>
+        <Text style = {styles.addButtonText}>+ Add</Text>
         </TouchableOpacity>
+
+        <View style = {styles.checkBoxSection}>
+        <CheckBox style = {styles.checkBox} value = {isChecked} onValueChange = {setChecked} color={isChecked ? '#6750A4' : undefined}></CheckBox>
+        <Text style = {styles.checkBoxText}>Track quantity</Text>
+        </View>
 
         <TouchableOpacity onPress = {() => navigation.navigate('Home')}>
         <Text style = {styles.cancelButton}>Cancel</Text>
@@ -54,8 +61,35 @@ const styles = StyleSheet.create({
     },
     addButton:
     {
-
+      backgroundColor: '#6750A4',
+      borderRadius: 50,
+      alignItems: 'center',
+      paddingTop: 25,
+      paddingBottom: 25,
+      position: 'absolute',
+      bottom: 25,
+      left: 0,
+      right: 0,
+      marginLeft: 25,
+      marginRight: 25,
+    },
+    addButtonText: {
+      color: 'white',
+      fontSize: 25,
+      fontWeight: 'bold',
+    },
+    checkBox: {
+      marginRight: 10,
+    },
+    checkBoxSection: {
+      marginTop: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    checkBoxText: {
+      fontSize: 15,
     }
+
 
 })
 

@@ -38,6 +38,8 @@ const HomeScreen = ( { route, navigation } ) => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
       <Text style = {styles.mainHeading}>Hello, {username}!</Text>
+
+      {pendingHabitItems.length > 0 && (
       <View style={styles.pendingTasksContainer}>
         <Text style = {styles.taskHeading}>Pending for today</Text>
         {
@@ -46,7 +48,7 @@ const HomeScreen = ( { route, navigation } ) => {
           ))}
 
       </View>
-
+      )}
             
       {completedHabitItems.length > 0 && ( // Conditionally render the View if completedHabits is not empty
         <View style={styles.completedTasksContainer}>
@@ -75,11 +77,12 @@ const styles = StyleSheet.create({
   pendingTasksContainer: {
     paddingTop: 100,
     paddingHorizontal: 20,
-    paddingBottom: 100,
+    paddingBottom: 0,
   },
   completedTasksContainer: {
     paddingHorizontal: 20,
     paddingBottom: 100,
+    paddingTop: 100,
   },
   taskHeading: {
     fontSize: 24,
