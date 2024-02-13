@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, ScrollView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Habit from '../components/Habit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const HomeScreen = ( { route, navigation } ) => {
@@ -17,6 +18,58 @@ const HomeScreen = ( { route, navigation } ) => {
       navigation.setParams({ habit: null });
     }
   }, [route.params?.habit]);
+
+  
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const pendingItems = await AsyncStorage.getItem('pendingHabitItems');
+        const completedItems = await AsyncStorage.getItem('completedHabitItems');
+
+        console.log(await AsyncStorage.getItem('pendingItems'));
+        console.log(await AsyncStorage.getItem('completedItems'));
+        
+        if (pendingItems !== null) {
+          setPendingHabitItems(JSON.parse(pendingItems));
+        }
+        if (completedItems !== null) {
+          setCompletedHabitItems(JSON.parse(completedItems));
+        }
+      } catch (error) {
+        console.error('Error loading data: ', error);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await AsyncStorage.setItem('pendingHabitItems', JSON.stringify(pendingHabitItems));
+        console.log('Saving pendingHabitItems successful');
+      } catch (error) {
+        console.error('Error saving pendingHabitItems', error);
+      }
+    };
+  
+    saveData();
+  }, [pendingHabitItems]);
+  
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await AsyncStorage.setItem('completedHabitItems', JSON.stringify(completedHabitItems));
+        console.log('Saving completedHabitItems successful');
+      } catch (error) {
+        console.error('Error saving completedHabitItems', error);
+      }
+    };
+  
+    saveData();
+  }, [completedHabitItems]);
+  
+
  
   const addHabitToList = () => {
     const newHabit = route.params.habit;
