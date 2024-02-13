@@ -33,7 +33,7 @@ const HabitPopup = ({ visible, initialValue, onSubmit, onClose }) => {
   );
 };
 
-const Habit = (props) => {
+const HabitUpdated = (props) => {
     
   //Destructuring the props object
   const { text, onPress, quantity } = props;
@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginVertical: 8,
   },
   progressText: {
     fontSize: 16,
@@ -158,15 +159,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-const CalendarScreen = () => {
-  return (
-    <View style={{paddingHorizontal: 20, paddingTop: 50,}}>
-      <Habit text = "Quantifiable" key = {1} quantity = {10}></Habit>
-      <Habit text = "Non quantifiable" key = {2}></Habit>
-    </View>
-  );
-}
-
-
-  export default CalendarScreen;
+  export default HabitUpdated;

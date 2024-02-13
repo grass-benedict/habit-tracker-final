@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, ScrollView} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Habit from '../components/Habit';
+import HabitUpdated from '../components/HabitUpdated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -97,7 +98,7 @@ const HomeScreen = ( { route, navigation } ) => {
         <Text style = {styles.taskHeading}>Pending for today</Text>
         {
           pendingHabitItems.map((habit, index) => (
-          <Habit key={index} text={habit} onPress={() => moveHabitToCompleted(index)} />
+          <HabitUpdated key={index} text={habit} onPress={() => moveHabitToCompleted(index)} />
           ))}
 
       </View>
@@ -107,7 +108,7 @@ const HomeScreen = ( { route, navigation } ) => {
         <View style={styles.completedTasksContainer}>
           <Text style={styles.taskHeading}>Completed</Text>
           {completedHabitItems.map((habit, index) => (
-            <Habit key={index} text={habit} onPress={() => moveHabitToPending(index)} />
+            <HabitUpdated key={index} text={habit} onPress={() => moveHabitToPending(index)} />
           ))}
         </View>
       )}
