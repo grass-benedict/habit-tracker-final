@@ -5,10 +5,11 @@ import CheckBox from 'expo-checkbox';
 const NewHabitScreen = ( { navigation } ) => {
 
     const [name, setName] = useState();
+    const [quantity, setQuantity] = useState('');
     const [isChecked, setChecked] = useState(false);
 
     const handleAddHabit = () => {
-        navigation.navigate('Home', {habit: name})
+        navigation.navigate('Home', {habit: name, quantity: quantity})
     }
 
 
@@ -26,6 +27,16 @@ const NewHabitScreen = ( { navigation } ) => {
         <CheckBox style = {styles.checkBox} value = {isChecked} onValueChange = {setChecked} color={isChecked ? '#6750A4' : undefined}></CheckBox>
         <Text style = {styles.checkBoxText}>Track quantity</Text>
         </View>
+
+        {isChecked && (
+        <TextInput
+            style={styles.input}
+            value={quantity}
+            placeholder={"Enter quantity..."}
+            onChangeText={text => setQuantity(text)}
+            keyboardType="numeric"
+          />
+          )}
 
         <TouchableOpacity onPress = {() => navigation.navigate('Home')}>
         <Text style = {styles.cancelButton}>Cancel</Text>
@@ -82,7 +93,7 @@ const styles = StyleSheet.create({
       marginRight: 10,
     },
     checkBoxSection: {
-      marginTop: 10,
+      marginVertical: 10,
       flexDirection: 'row',
       alignItems: 'center',
     },

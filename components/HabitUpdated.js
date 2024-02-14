@@ -1,6 +1,8 @@
 import React, {useState} from 'react'; 
 import {Modal, Text, View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 
+//Updated version of the Habit component which supports quantifiable habits
+//This Popup is used to adjust the amount achieved
 const HabitPopup = ({ visible, initialValue, onSubmit, onClose }) => {
   const [value, setValue] = useState(initialValue.toString());
 
@@ -33,6 +35,7 @@ const HabitPopup = ({ visible, initialValue, onSubmit, onClose }) => {
   );
 };
 
+
 const HabitUpdated = (props) => {
     
   //Destructuring the props object
@@ -53,13 +56,15 @@ const HabitUpdated = (props) => {
     setPopupVisible(false);
   };
 
+  //If quantity is greater than 1, render the component with a linear progress bar
   if (quantity > 1) {
     return (
       <TouchableOpacity style={styles.containerQuantifiable} onPress={handleOpenPopup}>
         <Text style={styles.text}>{text}</Text>
         <Text style={styles.progressText}>{completed}/{quantity} completed</Text>
         <View style={styles.progressBarContainer}>
-          <View style={[styles.progressBar, { width: `${(completed / quantity) * 100}%` }]} />
+          <View style={[styles.progressBar, { width: `${(completed / quantity) * 100}%` }]} />       
+          {/*This function calculates the ratio of progress to desired quantity and renders the progressBar accordingly*/}
         </View>
         <HabitPopup
           visible={isPopupVisible}
@@ -71,7 +76,7 @@ const HabitUpdated = (props) => {
     );
   }
 
-  // If quantity is 1 or less, render the component as is
+  //If quantity is 1 or less, render the component without progress bar
   return (
     <TouchableOpacity style={styles.containerNonQuantifiable} onPress={onPress}>
       <Text style={styles.text}>{text}</Text>

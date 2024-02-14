@@ -35,9 +35,12 @@ const UsernameOverlay = () => {
 }
 */
 
+//Create Navigators for tab and stack navigation
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator(); 
 
+
+//Display options for the navbar
 const screenOptions = {
   tabBarShowLabel: false,
   headerShown: false,
@@ -54,6 +57,7 @@ const screenOptions = {
   }
 }
 
+//Tab Navigator at the bottom of screen
 const TabNavigator = () => {
 
   return (
@@ -142,6 +146,8 @@ const TabNavigator = () => {
 
 }
 
+//Nested Navigation, render the tab navigator inside the stack navigator
+//AddScreen and NewHabitScreen are placed on top of the stack
 export default function App() {
   return (
     <NavigationContainer>
@@ -156,8 +162,9 @@ export default function App() {
   );
 }
 
-//TODO: Funktion zur Eingabe des Namens implementieren
+//Todo: write a function to input username
 const username = "Benedict";
+
 //Stylesheet
 const styles = StyleSheet.create({
   container: {

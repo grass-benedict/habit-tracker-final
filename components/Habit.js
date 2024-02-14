@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+//First version of Habit component, does not support quantifiable habits
+//Replaced by HabitUpdated.js
 
 const Habit = (props) => {
     

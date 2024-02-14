@@ -13,14 +13,15 @@ const HomeScreen = ( { route, navigation } ) => {
   const [completedHabitItems, setCompletedHabitItems] = useState([]);
 
   useEffect(() => {
-    //Wenn Parameter übergeben, erstelle neues Habit
+    //Create a new habit if a parameter is passed
     if (route.params?.habit) {
       addHabitToList();
       navigation.setParams({ habit: null });
     }
   }, [route.params?.habit]);
 
-  
+  //useEffect hook to load pending and completed habits from AsyncStorage into 
+  //Pending habits work fine, completed habits are not loaded properly
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -44,6 +45,8 @@ const HomeScreen = ( { route, navigation } ) => {
     loadData();
   }, []);
 
+
+  //These two useEffect hooks save Data from pending and completed habits into AsyncStorage
   useEffect(() => {
     const saveData = async () => {
       try {
@@ -71,12 +74,16 @@ const HomeScreen = ( { route, navigation } ) => {
   }, [completedHabitItems]);
   
 
- 
+ //This function is called when a new habit is passed to the home screen
   const addHabitToList = () => {
     const newHabit = route.params.habit;
-    setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, newHabit]);
+    const newQuantity = route.params.quantity;
+    const newHabitWithQuantity = {name: newHabit, quantity: newQuantity};
+    setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, newHabitWithQuantity]);
   } 
 
+  //Placeholder functions for swapping habits between pending and completed
+  //Todo: Make quantifiable habits move automatically when the desired amount is achieved
   const moveHabitToCompleted = (index) => {
     const habitToMove = pendingHabitItems[index];
     setPendingHabitItems(pendingHabitItems => pendingHabitItems.filter((_, i) => i !== index));
@@ -93,31 +100,33 @@ const HomeScreen = ( { route, navigation } ) => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
       <Text style = {styles.mainHeading}>Hello, {username}!</Text>
 
+      {/*Conditional rendering, if array is not empty, render habits using the map function*/}
       {pendingHabitItems.length > 0 && (
       <View style={styles.pendingTasksContainer}>
         <Text style = {styles.taskHeading}>Pending for today</Text>
         {
           pendingHabitItems.map((habit, index) => (
-          <HabitUpdated key={index} text={habit} onPress={() => moveHabitToCompleted(index)} />
+          <HabitUpdated key={index} text={habit.name} quantity = {habit.quantity} onPress={() => moveHabitToCompleted(index)} />
           ))}
 
       </View>
       )}
-            
-      {completedHabitItems.length > 0 && ( // Conditionally render the View if completedHabits is not empty
+
+      {/*Conditional rendering, if array is not empty, render habits using the map function*/}            
+      {completedHabitItems.length > 0 && (
         <View style={styles.completedTasksContainer}>
           <Text style={styles.taskHeading}>Completed</Text>
           {completedHabitItems.map((habit, index) => (
-            <HabitUpdated key={index} text={habit} onPress={() => moveHabitToPending(index)} />
+            <HabitUpdated key={index} text={habit.name} quantity = {habit.quantity} onPress={() => moveHabitToPending(index)} />
           ))}
         </View>
       )}
-
       <StatusBar style="auto" />
     </ScrollView>
   );
 }
 
+//Todo: implement input which is called on first launch of the app
 const username = "Benedict";
 
 const styles = StyleSheet.create({
