@@ -11,6 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const HomeScreen = ( { route, navigation } ) => {
   const [pendingHabitItems, setPendingHabitItems] = useState([]);
   const [completedHabitItems, setCompletedHabitItems] = useState([]);
+  //const [habitToDeleteIndex, setHabitToDeleteIndex] = useState(null);
+  //const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
   useEffect(() => {
     //Create a new habit if a parameter is passed
@@ -86,8 +88,10 @@ const HomeScreen = ( { route, navigation } ) => {
   //Todo: Make quantifiable habits move automatically when the desired amount is achieved
   const moveHabitToCompleted = (index) => {
     const habitToMove = pendingHabitItems[index];
+    if (habitToMove.quantity === 1 || (habitToMove.quantity > 1 && habitToMove.completed === habitToMove.quantity)) {
     setPendingHabitItems(pendingHabitItems => pendingHabitItems.filter((_, i) => i !== index));
     setCompletedHabitItems(completedHabitItems => [...completedHabitItems, habitToMove]);   
+    }
   }
 
   const moveHabitToPending = (index) => {
@@ -95,6 +99,22 @@ const HomeScreen = ( { route, navigation } ) => {
     setCompletedHabitItems(completedHabitItems => completedHabitItems.filter((_, i) => i !== index));
     setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, habitToMove]);  
   }
+  /*
+  const deleteHabit = (isCompleted) => {
+    if (habitToDeleteIndex !== null) {
+      if (isCompleted) {
+        const newCompletedHabitItems = [...completedHabitItems];
+        newCompletedHabitItems.splice(habitToDeleteIndex, 1);
+        setCompletedHabitItems(newCompletedHabitItems);
+      } else {
+        const newPendingHabitItems = [...pendingHabitItems];
+        newPendingHabitItems.splice(habitToDeleteIndex, 1);
+        setPendingHabitItems(newPendingHabitItems);
+      }
+      setHabitToDeleteIndex(null); // Reset habitToDeleteIndex
+      setDeleteModalVisible(false); // Close the delete modal
+    }
+  }; */
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
@@ -106,7 +126,13 @@ const HomeScreen = ( { route, navigation } ) => {
         <Text style = {styles.taskHeading}>Pending for today</Text>
         {
           pendingHabitItems.map((habit, index) => (
-          <HabitUpdated key={index} text={habit.name} quantity = {habit.quantity} onPress={() => moveHabitToCompleted(index)} />
+          <HabitUpdated key={index} 
+          text={habit.name} 
+          quantity = {habit.quantity} 
+          onPress={() => moveHabitToCompleted(index)}
+          //onLongPress = {() => setHabitToDeleteIndex(index)}
+          //onDelete={() => deleteHabit(index, false)}
+          />
           ))}
 
       </View>

@@ -5,7 +5,7 @@ import CheckBox from 'expo-checkbox';
 const NewHabitScreen = ( { navigation } ) => {
 
     const [name, setName] = useState();
-    const [quantity, setQuantity] = useState('');
+    const [quantity, setQuantity] = useState(1);
     const [isChecked, setChecked] = useState(false);
 
     const handleAddHabit = () => {
@@ -31,7 +31,7 @@ const NewHabitScreen = ( { navigation } ) => {
         {isChecked && (
         <TextInput
             style={styles.input}
-            value={quantity}
+            value={quantity.toString()}
             placeholder={"Enter quantity..."}
             onChangeText={text => setQuantity(text)}
             keyboardType="numeric"

@@ -35,12 +35,53 @@ const HabitPopup = ({ visible, initialValue, onSubmit, onClose }) => {
   );
 };
 
+const DeleteModal = ({ visible, onClose, onDelete }) => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={visible}
+        onRequestClose={onClose}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text>Are you sure you want to delete this habit?</Text>
+            <TouchableOpacity onPress={onDelete}>
+              <Text>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onClose}>
+              <Text>No</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  };
+
 
 const HabitUpdated = (props) => {
     
   //Destructuring the props object
-  const { text, onPress, quantity } = props;
+  const { text, onPress, quantity, onLongPress } = props;
 
+  //Modal popup to handle deleting the habit on long press
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const handleOpenDeleteModal = () => {
+    setDeleteModalVisible(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setDeleteModalVisible(false);
+  };
+
+  const handleDelete = () => {
+    props.onDelete();
+    handleCloseDeleteModal();
+  };
+
+
+  //Modal popup to set completion rate
   const [completed, setCompleted] = useState(0);
   const [isPopupVisible, setPopupVisible] = useState(false);
 
@@ -59,26 +100,34 @@ const HabitUpdated = (props) => {
   //If quantity is greater than 1, render the component with a linear progress bar
   if (quantity > 1) {
     return (
-      <TouchableOpacity style={styles.containerQuantifiable} onPress={handleOpenPopup}>
+      <TouchableOpacity style={styles.containerQuantifiable} onPress={handleOpenPopup} onLongPress = {handleOpenDeleteModal}>
         <Text style={styles.text}>{text}</Text>
         <Text style={styles.progressText}>{completed}/{quantity} completed</Text>
         <View style={styles.progressBarContainer}>
           <View style={[styles.progressBar, { width: `${(completed / quantity) * 100}%` }]} />       
           {/*This function calculates the ratio of progress to desired quantity and renders the progressBar accordingly*/}
         </View>
+        
         <HabitPopup
           visible={isPopupVisible}
           initialValue={completed}
           onSubmit={handleSubmitPopup}
           onClose={handleClosePopup}
         />
+
+        <DeleteModal
+        visible={isDeleteModalVisible}
+        onClose={handleCloseDeleteModal}
+        onDelete={handleDelete}
+        />
+
       </TouchableOpacity>
     );
   }
 
   //If quantity is 1 or less, render the component without progress bar
   return (
-    <TouchableOpacity style={styles.containerNonQuantifiable} onPress={onPress}>
+    <TouchableOpacity style={styles.containerNonQuantifiable} onPress={onPress} onLongPress = {handleOpenDeleteModal}>
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );
