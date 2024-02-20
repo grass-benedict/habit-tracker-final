@@ -18,7 +18,7 @@ const AddScreen = ( { navigation } ) => {
         </View>
     
         <View style = {styles.addAddictionContainer}>
-          <TouchableOpacity style = {styles.addAddictionButton}>
+          <TouchableOpacity style = {styles.addAddictionButton} onPress = {() => navigation.navigate('NewAddiction')}>
             <View style = {styles.addHabitButtonTextContainer}>
             <Text style = {styles.addHabitButtonHeading}>Quit an addiction</Text>
             <Text style = {styles.addHabitButtonInfoText}>Your progress will be tracked automatically to grow your streak, unless you reset it.</Text>

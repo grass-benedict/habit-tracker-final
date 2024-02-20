@@ -5,12 +5,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Habit from '../components/Habit';
 import HabitUpdated from '../components/HabitUpdated';
+import Addiction from '../components/Addiction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const HomeScreen = ( { route, navigation } ) => {
   const [pendingHabitItems, setPendingHabitItems] = useState([]);
   const [completedHabitItems, setCompletedHabitItems] = useState([]);
+  const [addictionItems, setAddictionItems] = useState([]);
   //const [habitToDeleteIndex, setHabitToDeleteIndex] = useState(null);
   //const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
@@ -22,6 +24,14 @@ const HomeScreen = ( { route, navigation } ) => {
     }
   }, [route.params?.habit]);
 
+  useEffect(() => {
+    //Create a new addiction if a parameter is passed
+    if (route.params?.addiction) {
+      addAddictionToList();
+      navigation.setParams({ addiction: null });
+    }
+  }, [route.params?.addiction]);
+
   //useEffect hook to load pending and completed habits from AsyncStorage into 
   //Pending habits work fine, completed habits are not loaded properly
   useEffect(() => {
@@ -29,6 +39,7 @@ const HomeScreen = ( { route, navigation } ) => {
       try {
         const pendingItems = await AsyncStorage.getItem('pendingHabitItems');
         const completedItems = await AsyncStorage.getItem('completedHabitItems');
+
 
         console.log(await AsyncStorage.getItem('pendingItems'));
         console.log(await AsyncStorage.getItem('completedItems'));
@@ -83,6 +94,14 @@ const HomeScreen = ( { route, navigation } ) => {
     const newHabitWithQuantity = {name: newHabit, quantity: newQuantity};
     setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, newHabitWithQuantity]);
   } 
+
+ //This function is called when a new addiction is passed to the home screen
+ const addAddictionToList = () => {
+  const newAddictionTitle = route.params.addiction;
+  const newDate = new Date(route.params.date);
+  const newAddiction = {addiction: newAddictionTitle, date: newDate};
+  setAddictionItems(addictionItems => [...addictionItems, newAddiction]);
+} 
 
   //Placeholder functions for swapping habits between pending and completed
   //Todo: Make quantifiable habits move automatically when the desired amount is achieved
@@ -147,6 +166,20 @@ const HomeScreen = ( { route, navigation } ) => {
           ))}
         </View>
       )}
+
+
+      {/*Conditional rendering, if array is not empty, render addictions using the map function*/}   
+               
+      {addictionItems.length > 0 && (
+        <View style={styles.completedTasksContainer}>
+          <Text style={styles.taskHeading}>Addictions</Text>
+          {addictionItems.map((addiction, index) => (
+            <Addiction key={index} text = {addiction.addiction} initialStartDate = {new Date(addiction.date)}/>
+          ))}
+        </View>
+      )} 
+
+
       <StatusBar style="auto" />
     </ScrollView>
   );
@@ -166,7 +199,7 @@ const styles = StyleSheet.create({
   pendingTasksContainer: {
     paddingTop: 100,
     paddingHorizontal: 20,
-    paddingBottom: 0,
+    paddingBottom: 100,
   },
   completedTasksContainer: {
     paddingHorizontal: 20,

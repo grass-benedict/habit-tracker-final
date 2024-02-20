@@ -4,13 +4,13 @@ import { Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
 //Addiction component which calculates and displays the elapsed time
 //based on the startDate object passed as a parameter
-const Addiction = ({ text, initialStartDate }) => {
+const Addiction = ({ text, initialStartDate, onPress }) => {
 
     //Destructuring the props object
     //const { text, startDate } = props;
 
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [startDate, setStartDate] = useState(initialStartDate);
+    const [startDate, setStartDate] = useState(initialStartDate || new Date());
 
     //useEffect hook to calculate the interval, called every 1000ms (1 second)
     useEffect(() => {
@@ -104,3 +104,4 @@ const styles = StyleSheet.create({
       },
 });
 
+export default Addiction;

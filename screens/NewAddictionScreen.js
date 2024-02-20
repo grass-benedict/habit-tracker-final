@@ -1,31 +1,87 @@
 import React, {useState} from 'react'; 
 import {Text, View, TouchableOpacity, StyleSheet, TextInput} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
-const NewAddictionScreen = ( { navigation } ) => {
+const NewAddictionScreen = ({ navigation }) => {
+  const [name, setName] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
-    const [name, setName] = useState();
+  const handleAddAddiction = () => {
+    navigation.navigate('Home', { addiction: name, date: date.toJSON() });
+  };
 
-    const handleAddAddiction = () => {
-        navigation.navigate('Home', {addiction: name})
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(false);
+    setShowTimePicker(true); // Show the time picker after selecting the date
+    setDate(currentDate);
+  };
+
+  const onChangeTime = (event, selectedTime) => {
+    if (selectedTime === undefined) {
+      setShowTimePicker(false);
+      return; // No time selected, no need to update date
     }
+    
+    // Create a new Date object for the updated date with the selected time
+    const updatedDate = new Date(date.getTime()); // Create a new Date object based on the current date
+    updatedDate.setHours(selectedTime.getHours());
+    updatedDate.setMinutes(selectedTime.getMinutes());
+  
+    setShowTimePicker(false);
+    setDate(updatedDate);
+  };
 
+  const showDatePickerMode = () => {
+    setShowDatePicker(true);
+  };
 
+  const formatDateToString = (date) => {
+    const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+    const formattedTime = `${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;
+    return `${formattedDate}, ${formattedTime}`;
+  };
 
-    return (
-      <View style={styles.container}>
-        <Text style = {styles.heading}>Name</Text>
-        <TextInput style = {styles.input} placeholder = "Enter addiction..." value = {name} onChangeText={text => setName(text)}></TextInput>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.heading}>Name</Text>
+      <TextInput style={styles.input} placeholder="Enter addiction..." value={name} onChangeText={text => setName(text)} />
 
-        <TouchableOpacity style = {styles.addButton} onPress = {() => handleAddAddiction()}>
-        <Text style = {styles.addButtonText}>+ Add</Text>
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.addButton} onPress={handleAddAddiction}>
+        <Text style={styles.addButtonText}>+ Add</Text>
+      </TouchableOpacity>
 
-        <TouchableOpacity onPress = {() => navigation.navigate('Home')}>
-        <Text style = {styles.cancelButton}>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+      <Text style={styles.startDateHeading}>Start date</Text>
+
+      <TouchableOpacity onPress={showDatePickerMode}>
+        <Text style={styles.input}>{formatDateToString(date)}</Text>
+        {showDatePicker && (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="default"
+            onChange={onChangeDate}
+          />
+        )}
+      </TouchableOpacity>
+
+      {showTimePicker && (
+        <DateTimePicker
+          value={date}
+          mode="time"
+          display="default"
+          onChange={onChangeTime}
+        />
+      )}
+
+      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <Text style={styles.cancelButton}>Cancel</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -41,6 +97,11 @@ const styles = StyleSheet.create({
         fontSize: 24,
         paddingBottom: 10,
     }, 
+    startDateHeading: {
+        fontSize: 24, 
+        paddingTop: 20,
+        paddingBottom: 10,
+    },
     input: {
         borderStyle: "solid",
         borderWidth: 1,
@@ -50,7 +111,7 @@ const styles = StyleSheet.create({
     },
     cancelButton:
     {
-        marginTop: 10,
+        marginTop: 20,
     },
     addButton:
     {

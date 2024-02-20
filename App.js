@@ -18,6 +18,7 @@ import NotificationScreen from './screens/NotificationScreen';
 import HomeScreen from './screens/HomeScreen';
 import AddScreen from './screens/AddScreen';
 import NewHabitScreen from './screens/NewHabitScreen';
+import NewAddictionScreen from './screens/NewAddictionScreen';
 
 
 /*
@@ -155,6 +156,7 @@ export default function App() {
       <Stack.Screen name="TabNavigator" component={TabNavigator}/>  
       <Stack.Screen name="Add" component={AddScreen} options={{ title: 'Add' }} /> 
       <Stack.Screen name="NewHabit" component={NewHabitScreen}/>   
+      <Stack.Screen name="NewAddiction" component={NewAddictionScreen}/>   
 
       </Stack.Navigator>
       
