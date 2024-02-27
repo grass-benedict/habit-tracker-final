@@ -5,11 +5,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 const NewAddictionScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const handleAddAddiction = () => {
-    navigation.navigate('Home', { addiction: name, date: date.toJSON() });
+    const combinedDateTime = new Date(date);
+    combinedDateTime.setHours(time.getHours());
+    combinedDateTime.setMinutes(time.getMinutes());
+    navigation.navigate('Home', { addiction: name, date: combinedDateTime.toJSON() });
   };
 
   const onChangeDate = (event, selectedDate) => {
@@ -22,30 +26,34 @@ const NewAddictionScreen = ({ navigation }) => {
   const onChangeTime = (event, selectedTime) => {
     if (selectedTime === undefined) {
       setShowTimePicker(false);
-      return; // No time selected, no need to update date
+      return; // No time selected, no need to update time
     }
     
-    // Create a new Date object for the updated date with the selected time
-    const updatedDate = new Date(date.getTime()); // Create a new Date object based on the current date
-    updatedDate.setHours(selectedTime.getHours());
-    updatedDate.setMinutes(selectedTime.getMinutes());
-  
     setShowTimePicker(false);
-    setDate(updatedDate);
+    setTime(selectedTime);
   };
 
   const showDatePickerMode = () => {
     setShowDatePicker(true);
   };
 
-  const formatDateToString = (date) => {
-    const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-    const formattedTime = `${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;
+  const formatDateToString = (datetime) => {
+    const formattedDate = `${datetime.getDate()}.${datetime.getMonth() + 1}.${datetime.getFullYear()}`;
+    const formattedTime = `${datetime.getHours()}:${datetime.getMinutes() < 10 ? '0' : ''}${datetime.getMinutes()}`;
     return `${formattedDate}, ${formattedTime}`;
   };
 
   return (
     <View style={styles.container}>
+
+      <View style = {styles.headerContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+        <Text style={styles.cancelButton}>&lt;</Text>
+      </TouchableOpacity>
+
+      <Text style = {styles.mainHeading}>Quit an addiction</Text>
+      </View>
+
       <Text style={styles.heading}>Name</Text>
       <TextInput style={styles.input} placeholder="Enter addiction..." value={name} onChangeText={text => setName(text)} />
 
@@ -56,7 +64,7 @@ const NewAddictionScreen = ({ navigation }) => {
       <Text style={styles.startDateHeading}>Start date</Text>
 
       <TouchableOpacity onPress={showDatePickerMode}>
-        <Text style={styles.input}>{formatDateToString(date)}</Text>
+        <Text style={styles.dateInput}>{formatDateToString(date)}</Text>
         {showDatePicker && (
           <DateTimePicker
             value={date}
@@ -69,16 +77,14 @@ const NewAddictionScreen = ({ navigation }) => {
 
       {showTimePicker && (
         <DateTimePicker
-          value={date}
+          value={time}
           mode="time"
           display="default"
           onChange={onChangeTime}
         />
       )}
 
-      <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-        <Text style={styles.cancelButton}>Cancel</Text>
-      </TouchableOpacity>
+
     </View>
   );
 };
@@ -88,17 +94,33 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingLeft: 30,
         paddingRight: 30,
-        paddingTop: 100,
+        paddingTop: 50,
         backgroundColor: '#f0f0f0',
         //alignItems: 'center',
         //justifyContent: 'center'
       },
+    headerContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    mainHeading: {
+      fontWeight: 'bold',
+      fontSize: 24,
+      flex: 1,
+      textAlign: 'center',
+    },
+    cancelButton: {
+      color: '#00A3FE',
+      fontSize: 24,
+    },
+
     heading: {
-        fontSize: 24,
+        fontSize: 20,
         paddingBottom: 10,
     }, 
     startDateHeading: {
-        fontSize: 24, 
+        fontSize: 20, 
         paddingTop: 20,
         paddingBottom: 10,
     },
@@ -109,10 +131,14 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 5,
     },
-    cancelButton:
-    {
-        marginTop: 20,
-    },
+    dateInput: {
+      borderStyle: "solid",
+      borderWidth: 1,
+      borderColor: "darkgrey",
+      borderRadius: 5,
+      paddingVertical: 10,
+      paddingLeft: 5,
+  },
     addButton:
     {
       backgroundColor: '#6750A4',
