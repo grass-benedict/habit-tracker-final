@@ -107,10 +107,10 @@ const HomeScreen = ( { route, navigation } ) => {
   //Todo: Make quantifiable habits move automatically when the desired amount is achieved
   const moveHabitToCompleted = (index) => {
     const habitToMove = pendingHabitItems[index];
-    if (habitToMove.quantity === 1 || (habitToMove.quantity > 1 && habitToMove.completed === habitToMove.quantity)) {
+    //if (habitToMove.quantity === 1 || (habitToMove.quantity > 1 && habitToMove.completed === habitToMove.quantity)) {
     setPendingHabitItems(pendingHabitItems => pendingHabitItems.filter((_, i) => i !== index));
     setCompletedHabitItems(completedHabitItems => [...completedHabitItems, habitToMove]);   
-    }
+    //}
   }
 
   const moveHabitToPending = (index) => {
@@ -148,7 +148,7 @@ const HomeScreen = ( { route, navigation } ) => {
           <HabitUpdated key={index} 
           text={habit.name} 
           quantity = {habit.quantity} 
-          onPress={() => moveHabitToCompleted(index)}
+          moveHabit={() => moveHabitToCompleted(index)}
           //onLongPress = {() => setHabitToDeleteIndex(index)}
           //onDelete={() => deleteHabit(index, false)}
           />
@@ -162,7 +162,11 @@ const HomeScreen = ( { route, navigation } ) => {
         <View style={styles.completedTasksContainer}>
           <Text style={styles.taskHeading}>Completed</Text>
           {completedHabitItems.map((habit, index) => (
-            <HabitUpdated key={index} text={habit.name} quantity = {habit.quantity} onPress={() => moveHabitToPending(index)} />
+            <HabitUpdated key={index} 
+            text={habit.name} 
+            quantity = {habit.quantity} 
+            moveHabit={() => moveHabitToPending(index)}
+            />
           ))}
         </View>
       )}

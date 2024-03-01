@@ -3,7 +3,7 @@ import {Modal, Text, View, TextInput, StyleSheet, TouchableOpacity} from 'react-
 
 //Updated version of the Habit component which supports quantifiable habits
 //This Popup is used to adjust the amount achieved
-const HabitPopup = ({ visible, initialValue, onSubmit, onClose }) => {
+const HabitPopup = ({ visible, initialValue, onSubmit, onClose, }) => {
   const [value, setValue] = useState(initialValue.toString());
 
   const handleSubmit = () => {
@@ -62,7 +62,7 @@ const DeleteModal = ({ visible, onClose, onDelete }) => {
 const HabitUpdated = (props) => {
     
   //Destructuring the props object
-  const { text, onPress, quantity, onLongPress } = props;
+  const { text, onPress, quantity, onLongPress, moveHabit} = props;
 
   //Modal popup to handle deleting the habit on long press
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -91,6 +91,9 @@ const HabitUpdated = (props) => {
 
   const handleSubmitPopup = (value) => {
     setCompleted(value);
+    if (value == quantity || quantity <= 1){
+        moveHabit();
+    }
   };
 
   const handleClosePopup = () => {
@@ -111,6 +114,7 @@ const HabitUpdated = (props) => {
         <HabitPopup
           visible={isPopupVisible}
           initialValue={completed}
+          quantity={quantity}
           onSubmit={handleSubmitPopup}
           onClose={handleClosePopup}
         />
@@ -127,7 +131,7 @@ const HabitUpdated = (props) => {
 
   //If quantity is 1 or less, render the component without progress bar
   return (
-    <TouchableOpacity style={styles.containerNonQuantifiable} onPress={onPress} onLongPress = {handleOpenDeleteModal}>
+    <TouchableOpacity style={styles.containerNonQuantifiable} onPress={moveHabit} onLongPress = {handleOpenDeleteModal}>
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );
