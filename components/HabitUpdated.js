@@ -64,7 +64,7 @@ const DeleteModal = ({ visible, onClose, onDelete }) => {
 const HabitUpdated = (props) => {
 
   //Destructuring the props object
-  const { text, onPress, quantity, onLongPress, moveHabit, onDelete } = props;
+  const { text, onPress, quantity, onLongPress, moveHabit, onDeleted } = props;
 
   //Modal popup to handle deleting the habit on long press
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);

@@ -39,53 +39,41 @@ const HomeScreen = ( { route, navigation } ) => {
       try {
         const pendingItems = await AsyncStorage.getItem('pendingHabitItems');
         const completedItems = await AsyncStorage.getItem('completedHabitItems');
-
-
+        const addictionItemsData = await AsyncStorage.getItem('addictionItems'); // Retrieve addiction items
+  
         console.log(await AsyncStorage.getItem('pendingItems'));
         console.log(await AsyncStorage.getItem('completedItems'));
-        
+  
         if (pendingItems !== null) {
           setPendingHabitItems(JSON.parse(pendingItems));
         }
         if (completedItems !== null) {
           setCompletedHabitItems(JSON.parse(completedItems));
         }
+        if (addictionItemsData !== null) { // Check if addictionItemsData is not null
+          setAddictionItems(JSON.parse(addictionItemsData)); // Set addiction items
+        }
       } catch (error) {
         console.error('Error loading data: ', error);
       }
     };
-
+  
     loadData();
   }, []);
-
-
-  //These two useEffect hooks save Data from pending and completed habits into AsyncStorage
+  
   useEffect(() => {
     const saveData = async () => {
       try {
         await AsyncStorage.setItem('pendingHabitItems', JSON.stringify(pendingHabitItems));
-        console.log('Saving pendingHabitItems successful');
-      } catch (error) {
-        console.error('Error saving pendingHabitItems', error);
-      }
-    };
-  
-    saveData();
-  }, [pendingHabitItems]);
-  
-  useEffect(() => {
-    const saveData = async () => {
-      try {
         await AsyncStorage.setItem('completedHabitItems', JSON.stringify(completedHabitItems));
-        console.log('Saving completedHabitItems successful');
+        await AsyncStorage.setItem('addictionItems', JSON.stringify(addictionItems)); // Save addiction items
       } catch (error) {
-        console.error('Error saving completedHabitItems', error);
+        console.error('Error saving data: ', error);
       }
     };
   
     saveData();
-  }, [completedHabitItems]);
-  
+  }, [pendingHabitItems, completedHabitItems, addictionItems]);
 
  //This function is called when a new habit is passed to the home screen
   const addHabitToList = () => {
