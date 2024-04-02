@@ -35,54 +35,60 @@ const HomeScreen = ( { route, navigation } ) => {
   //useEffect hook to load pending and completed habits from AsyncStorage into 
   //Pending habits work fine, completed habits are not loaded properly
   useEffect(() => {
-    const loadDataAndCheckAppOpened = async () => {
+    const loadData = async () => {
       try {
-        // Retrieve the flag indicating whether the app was opened today
+        const pendingItems = await AsyncStorage.getItem('pendingHabitItems');
+        const completedItems = await AsyncStorage.getItem('completedHabitItems');
+        const addictionItemsData = await AsyncStorage.getItem('addictionItems'); // Retrieve addiction items
+
         const appOpenedToday = await AsyncStorage.getItem('appOpenedToday');
-        
+
         // Get today's date in yyyy-MM-dd format
         const today = new Date().toISOString().split('T')[0];
         console.log(today);
-        
-        // Load data from AsyncStorage
-        const pendingItems = await AsyncStorage.getItem('pendingHabitItems');
-        const completedItems = await AsyncStorage.getItem('completedHabitItems');
-        const addictionItemsData = await AsyncStorage.getItem('addictionItems');
-        
+  
         console.log(await AsyncStorage.getItem('pendingItems'));
         console.log(await AsyncStorage.getItem('completedItems'));
   
-        // Set state based on loaded data
         if (pendingItems !== null) {
           setPendingHabitItems(JSON.parse(pendingItems));
         }
         if (completedItems !== null) {
           setCompletedHabitItems(JSON.parse(completedItems));
         }
-        if (addictionItemsData !== null) {
-          setAddictionItems(JSON.parse(addictionItemsData));
+        if (addictionItemsData !== null) { // Check if addictionItemsData is not null
+          setAddictionItems(JSON.parse(addictionItemsData)); // Set addiction items
         }
-        
-        // If the app was opened today, do nothing
-        if (appOpenedToday === today) {
-          console.log("App already opened today");
-          return;
+
+        if (!appOpenedToday || appOpenedToday !== today) {
+          console.log("App opened for the first time today")
+          setPendingHabitItems(prevPending => [...prevPending, ...JSON.parse(completedItems)]);
+          setCompletedHabitItems([]); // Clear completed habits
+          // Update the flag to indicate that the app was opened today
+          await AsyncStorage.setItem('appOpenedToday', today);
         }
-        
-        // If the app was not opened today or appOpenedToday flag is not set, move all completed habits to pending
-        console.log("App opened for the first time today");
-        setPendingHabitItems(prevPending => [...prevPending, ...JSON.parse(completedItems)]);
-        setCompletedHabitItems([]);
-        
-        // Update the flag to indicate that the app was opened today
-        await AsyncStorage.setItem('appOpenedToday', today);
+
       } catch (error) {
-        console.error('Error loading data or checking app opening date:', error);
+        console.error('Error loading data: ', error);
       }
     };
   
-    loadDataAndCheckAppOpened();
+    loadData();
   }, []);
+  
+  useEffect(() => {
+    const saveData = async () => {
+      try {
+        await AsyncStorage.setItem('pendingHabitItems', JSON.stringify(pendingHabitItems));
+        await AsyncStorage.setItem('completedHabitItems', JSON.stringify(completedHabitItems));
+        await AsyncStorage.setItem('addictionItems', JSON.stringify(addictionItems)); // Save addiction items
+      } catch (error) {
+        console.error('Error saving data: ', error);
+      }
+    };
+  
+    saveData();
+  }, [pendingHabitItems, completedHabitItems, addictionItems]);
 
 
  //This function is called when a new habit is passed to the home screen
