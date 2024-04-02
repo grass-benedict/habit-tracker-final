@@ -3,7 +3,7 @@ import { Modal, Text, View, TextInput, StyleSheet, TouchableOpacity } from 'reac
 
 //Updated version of the Habit component which supports quantifiable habits
 //This Popup is used to adjust the amount achieved
-const HabitPopup = ({ visible, initialValue, onSubmit, onClose, }) => {
+const HabitPopup = ({ visible, initialValue, onSubmit, onClose }) => {
   const [value, setValue] = useState(initialValue.toString());
 
   const handleSubmit = () => {
@@ -16,19 +16,19 @@ const HabitPopup = ({ visible, initialValue, onSubmit, onClose, }) => {
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={onClose}
-    >
+      onRequestClose={onClose}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.deleteText}>Are you sure you want to delete this addiction?</Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={onDelete} style={styles.button}>
-              <Text style={styles.buttonText}>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onClose} style={styles.button}>
-              <Text style={styles.buttonText}>No</Text>
-            </TouchableOpacity>
-          </View>
+          <Text>Enter the amount completed:</Text>
+          <TextInput
+            style={styles.input}
+            value={value}
+            onChangeText={setValue}
+            keyboardType="numeric"
+          />
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text style = {styles.buttonText}>Ok</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
