@@ -45,7 +45,7 @@ const DeleteModal = ({ visible, onClose, onDelete }) => {
 >
   <View style={styles.modalContainer}>
     <View style={styles.modalContent}>
-      <Text style={styles.deleteText}>Are you sure you want to delete this addiction?</Text>
+      <Text style={styles.deleteText}>Are you sure you want to delete this habit?</Text>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={onDelete} style={styles.button}>
           <Text style={styles.buttonText}>Yes</Text>
@@ -64,7 +64,7 @@ const DeleteModal = ({ visible, onClose, onDelete }) => {
 const HabitUpdated = (props) => {
 
   //Destructuring the props object
-  const { text, onPress, quantity, onLongPress, moveHabit, onDeleted } = props;
+  const { text, onPress, quantity, onLongPress, moveHabit, onDelete } = props;
 
   //Modal popup to handle deleting the habit on long press
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);

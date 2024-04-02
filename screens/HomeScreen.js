@@ -161,7 +161,7 @@ const HomeScreen = ( { route, navigation } ) => {
 
       {/*Conditional rendering, if array is not empty, render habits using the map function*/}            
       {completedHabitItems.length > 0 && (
-        <View style={styles.completedTasksContainer}>
+        <View style={[styles.completedTasksContainer, { paddingTop: pendingHabitItems.length > 0 ? 20 : 100 }]}>
           <Text style={styles.taskHeading}>Completed</Text>
           {completedHabitItems.map((habit, index) => (
             <HabitUpdated key={index} 
@@ -179,7 +179,7 @@ const HomeScreen = ( { route, navigation } ) => {
       {/*Conditional rendering, if array is not empty, render addictions using the map function*/}   
                
       {addictionItems.length > 0 && (
-        <View style={styles.completedTasksContainer}>
+        <View style={[styles.completedTasksContainer, { paddingTop: pendingHabitItems.length > 0 ? 20 : 100 }]}>
           <Text style={styles.taskHeading}>Addictions</Text>
           {addictionItems.map((addiction, index) => (
             <Addiction key={index} 
@@ -213,13 +213,20 @@ const styles = StyleSheet.create({
   pendingTasksContainer: {
     paddingTop: 100,
     paddingHorizontal: 20,
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
   completedTasksContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 100,
+    paddingBottom: 20,
     paddingTop: 100,
   },
+  completedTasksContainerPendingVisible: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 20,
+  },
+
+
   taskHeading: {
     fontSize: 24,
     paddingBottom: 10,
