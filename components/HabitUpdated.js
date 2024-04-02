@@ -87,12 +87,13 @@ const HabitUpdated = (props) => {
   const [completed, setCompleted] = useState(0);
   const [isPopupVisible, setPopupVisible] = useState(false);
 
+
   const handleOpenPopup = () => {
     setPopupVisible(true);
   };
 
   const handleSubmitPopup = (value) => {
-    setCompleted(value);
+    setCompleted(value); 
     if (value == quantity || quantity <= 1) {
       moveHabit();
     }
