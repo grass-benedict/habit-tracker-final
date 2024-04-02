@@ -1,5 +1,5 @@
-import React, {useState} from 'react'; 
-import {Modal, Text, View, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { Modal, Text, View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 
 //Updated version of the Habit component which supports quantifiable habits
 //This Popup is used to adjust the amount achieved
@@ -16,19 +16,19 @@ const HabitPopup = ({ visible, initialValue, onSubmit, onClose, }) => {
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={onClose}>
+      onRequestClose={onClose}
+    >
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text>Enter the amount completed:</Text>
-          <TextInput
-            style={styles.input}
-            value={value}
-            onChangeText={setValue}
-            keyboardType="numeric"
-          />
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-            <Text style = {styles.buttonText}>Ok</Text>
-          </TouchableOpacity>
+          <Text style={styles.deleteText}>Are you sure you want to delete this addiction?</Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={onDelete} style={styles.button}>
+              <Text style={styles.buttonText}>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onClose} style={styles.button}>
+              <Text style={styles.buttonText}>No</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -36,33 +36,35 @@ const HabitPopup = ({ visible, initialValue, onSubmit, onClose, }) => {
 };
 
 const DeleteModal = ({ visible, onClose, onDelete }) => {
-    return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={visible}
-        onRequestClose={onClose}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text>Are you sure you want to delete this habit?</Text>
-            <TouchableOpacity onPress={onDelete}>
-              <Text>Yes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onClose}>
-              <Text>No</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
+  return (
+<Modal
+  animationType="slide"
+  transparent={true}
+  visible={visible}
+  onRequestClose={onClose}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.deleteText}>Are you sure you want to delete this addiction?</Text>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={onDelete} style={styles.button}>
+          <Text style={styles.buttonText}>Yes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onClose} style={styles.button}>
+          <Text style={styles.buttonText}>No</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
+  );
+};
 
 
 const HabitUpdated = (props) => {
-    
+
   //Destructuring the props object
-  const { text, onPress, quantity, onLongPress, moveHabit} = props;
+  const { text, onPress, quantity, onLongPress, moveHabit, onDelete } = props;
 
   //Modal popup to handle deleting the habit on long press
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -76,7 +78,7 @@ const HabitUpdated = (props) => {
   };
 
   const handleDelete = () => {
-    props.onDelete();
+    onDelete();
     handleCloseDeleteModal();
   };
 
@@ -91,8 +93,8 @@ const HabitUpdated = (props) => {
 
   const handleSubmitPopup = (value) => {
     setCompleted(value);
-    if (value == quantity || quantity <= 1){
-        moveHabit();
+    if (value == quantity || quantity <= 1) {
+      moveHabit();
     }
   };
 
@@ -103,14 +105,14 @@ const HabitUpdated = (props) => {
   //If quantity is greater than 1, render the component with a linear progress bar
   if (quantity > 1) {
     return (
-      <TouchableOpacity style={styles.containerQuantifiable} onPress={handleOpenPopup} onLongPress = {handleOpenDeleteModal}>
+      <TouchableOpacity style={styles.containerQuantifiable} onPress={handleOpenPopup} onLongPress={handleOpenDeleteModal}>
         <Text style={styles.text}>{text}</Text>
         <Text style={styles.progressText}>{completed}/{quantity} completed</Text>
         <View style={styles.progressBarContainer}>
-          <View style={[styles.progressBar, { width: `${(completed / quantity) * 100}%` }]} />       
+          <View style={[styles.progressBar, { width: `${(completed / quantity) * 100}%` }]} />
           {/*This function calculates the ratio of progress to desired quantity and renders the progressBar accordingly*/}
         </View>
-        
+
         <HabitPopup
           visible={isPopupVisible}
           initialValue={completed}
@@ -120,9 +122,9 @@ const HabitUpdated = (props) => {
         />
 
         <DeleteModal
-        visible={isDeleteModalVisible}
-        onClose={handleCloseDeleteModal}
-        onDelete={handleDelete}
+          visible={isDeleteModalVisible}
+          onClose={handleCloseDeleteModal}
+          onDelete={handleDelete}
         />
 
       </TouchableOpacity>
@@ -131,8 +133,15 @@ const HabitUpdated = (props) => {
 
   //If quantity is 1 or less, render the component without progress bar
   return (
-    <TouchableOpacity style={styles.containerNonQuantifiable} onPress={moveHabit} onLongPress = {handleOpenDeleteModal}>
+    <TouchableOpacity style={styles.containerNonQuantifiable} onPress={moveHabit} onLongPress={handleOpenDeleteModal}>
       <Text style={styles.text}>{text}</Text>
+
+      <DeleteModal
+        visible={isDeleteModalVisible}
+        onClose={handleCloseDeleteModal}
+        onDelete={handleDelete}
+      />
+
     </TouchableOpacity>
   );
 };
@@ -144,8 +153,8 @@ const commonStyles = {
   backgroundColor: '#fff',
   shadowColor: "#000",
   shadowOffset: {
-      width: 0,
-      height: 2,
+    width: 0,
+    height: 2,
   },
   shadowOpacity: 0.25,
   shadowRadius: 2,
@@ -196,25 +205,26 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
+    flexDirection: 'column',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 10,
-    width: '100%',
+  deleteText: {
+    marginBottom: 20,
+    fontSize: 18,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
   },
   button: {
-    backgroundColor: '#503B89',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
+    backgroundColor: '#6750A4',
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginHorizontal: 5,
   },
   buttonText: {
-    color: 'white',
+    color: '#fff',
     fontWeight: 'bold',
   },
 });
 
-  export default HabitUpdated;
+export default HabitUpdated;

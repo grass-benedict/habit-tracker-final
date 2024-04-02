@@ -1,13 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { Modal, Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+
+const DeleteModal = ({ visible, onClose, onDelete }) => {
+  return (
+<Modal
+  animationType="slide"
+  transparent={true}
+  visible={visible}
+  onRequestClose={onClose}
+>
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      <Text style={styles.deleteText}>Are you sure you want to delete this addiction?</Text>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={onDelete} style={styles.button}>
+          <Text style={styles.buttonText}>Yes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onClose} style={styles.button}>
+          <Text style={styles.buttonText}>No</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+</Modal>
+  );
+};
+
 
 
 //Addiction component which calculates and displays the elapsed time
 //based on the startDate object passed as a parameter
-const Addiction = ({ text, initialStartDate, onPress }) => {
+const Addiction = ({ text, initialStartDate, onPress, onDelete }) => {
 
     //Destructuring the props object
     //const { text, startDate } = props;
+
+
+    //Delete function
+    const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+
+    const handleOpenDeleteModal = () => {
+      setDeleteModalVisible(true);
+    };
+  
+    const handleCloseDeleteModal = () => {
+      setDeleteModalVisible(false);
+    };
+  
+    const handleDelete = () => {
+      onDelete();
+      handleCloseDeleteModal();
+    };
 
     const [elapsedTime, setElapsedTime] = useState(0);
     const [startDate, setStartDate] = useState(initialStartDate || new Date());
@@ -67,9 +110,16 @@ const handleOnPress = () => {
 
       //Display component
       return  (
-            <TouchableOpacity style={styles.addictionContainer} onPress = {handleOnPress}>
+            <TouchableOpacity style={styles.addictionContainer} onPress = {handleOnPress} onLongPress = {handleOpenDeleteModal}>
                 <Text style={styles.text}>{text}</Text>
                 <Text style={styles.timeText}>{formatTime(elapsedTime)}</Text>
+
+                <DeleteModal
+                  visible={isDeleteModalVisible}
+                  onClose={handleCloseDeleteModal}
+                  onDelete={handleDelete}
+                />
+
             </TouchableOpacity>
         
       );
@@ -101,6 +151,37 @@ const styles = StyleSheet.create({
     timeText: {
         fontSize: 18,
         color: '#202020',
+      },
+      modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      },
+      modalContent: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+        flexDirection: 'column',
+      },
+      deleteText: {
+        marginBottom: 20,
+        fontSize: 18,
+      },
+      buttonContainer: {
+        flexDirection: 'row',
+      },
+      button: {
+        backgroundColor: '#6750A4',
+        borderRadius: 8,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        marginHorizontal: 5,
+      },
+      buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
       },
 });
 

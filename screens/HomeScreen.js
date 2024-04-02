@@ -13,8 +13,8 @@ const HomeScreen = ( { route, navigation } ) => {
   const [pendingHabitItems, setPendingHabitItems] = useState([]);
   const [completedHabitItems, setCompletedHabitItems] = useState([]);
   const [addictionItems, setAddictionItems] = useState([]);
-  //const [habitToDeleteIndex, setHabitToDeleteIndex] = useState(null);
-  //const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [habitToDeleteIndex, setHabitToDeleteIndex] = useState(null);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
   useEffect(() => {
     //Create a new habit if a parameter is passed
@@ -118,22 +118,36 @@ const HomeScreen = ( { route, navigation } ) => {
     setCompletedHabitItems(completedHabitItems => completedHabitItems.filter((_, i) => i !== index));
     setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, habitToMove]);  
   }
-  /*
-  const deleteHabit = (isCompleted) => {
-    if (habitToDeleteIndex !== null) {
+
+
+  
+  const deleteHabit = (index, isCompleted) => {
+    if (index !== null) {
       if (isCompleted) {
         const newCompletedHabitItems = [...completedHabitItems];
-        newCompletedHabitItems.splice(habitToDeleteIndex, 1);
+        newCompletedHabitItems.splice(index, 1);
         setCompletedHabitItems(newCompletedHabitItems);
       } else {
         const newPendingHabitItems = [...pendingHabitItems];
-        newPendingHabitItems.splice(habitToDeleteIndex, 1);
+        newPendingHabitItems.splice(index, 1);
         setPendingHabitItems(newPendingHabitItems);
       }
-      setHabitToDeleteIndex(null); // Reset habitToDeleteIndex
-      setDeleteModalVisible(false); // Close the delete modal
+      setHabitToDeleteIndex(null); 
+      setDeleteModalVisible(false);
     }
-  }; */
+  };
+
+  const deleteAddiction = (index) => {
+    if (index !== null) {
+      const newAddictionItems = [...addictionItems];
+      newAddictionItems.splice(index, 1);
+      setAddictionItems(newAddictionItems);
+      setHabitToDeleteIndex(null); 
+      setDeleteModalVisible(false);
+    }
+  };
+
+
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
@@ -149,8 +163,8 @@ const HomeScreen = ( { route, navigation } ) => {
           text={habit.name} 
           quantity = {habit.quantity} 
           moveHabit={() => moveHabitToCompleted(index)}
-          //onLongPress = {() => setHabitToDeleteIndex(index)}
-          //onDelete={() => deleteHabit(index, false)}
+          onLongPress = {() => setHabitToDeleteIndex(index)}
+          onDelete={() => deleteHabit(index, false)}
           />
           ))}
 
@@ -166,6 +180,8 @@ const HomeScreen = ( { route, navigation } ) => {
             text={habit.name} 
             quantity = {habit.quantity} 
             moveHabit={() => moveHabitToPending(index)}
+            onLongPress = {() => setHabitToDeleteIndex(index)}
+            onDelete={() => deleteHabit(index, true)}
             />
           ))}
         </View>
@@ -178,7 +194,13 @@ const HomeScreen = ( { route, navigation } ) => {
         <View style={styles.completedTasksContainer}>
           <Text style={styles.taskHeading}>Addictions</Text>
           {addictionItems.map((addiction, index) => (
-            <Addiction key={index} text = {addiction.addiction} initialStartDate = {new Date(addiction.date)}/>
+            <Addiction key={index} 
+            text = {addiction.addiction} 
+            initialStartDate = {new Date(addiction.date)}
+            onLongPress = {() => setHabitToDeleteIndex(index)}
+            onDelete={() => deleteAddiction(index)}
+
+            />
           ))}
         </View>
       )} 
