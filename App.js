@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Text, View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-//import { Button, Overlay } from 'react-native-elements';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
@@ -20,21 +19,6 @@ import AddScreen from './screens/AddScreen';
 import NewHabitScreen from './screens/NewHabitScreen';
 import NewAddictionScreen from './screens/NewAddictionScreen';
 
-
-/*
-const UsernameOverlay = () => {
-  const [visible, setVisible] = useState(false);
-  const toggleOverlay = () => {
-    setVisible (!visible);
-  }
-
-  return (
-    <View>
-      <Overlay isVisible = {visible} onBackdropPress = {toggleOverlay}></Overlay>
-    </View>
-  );
-}
-*/
 
 //Create Navigators for tab and stack navigation
 const Tab = createBottomTabNavigator();
@@ -172,8 +156,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f0f0f0',
-    //alignItems: 'center',
-    //justifyContent: 'center',
 
   },
   pendingTasksContainer: {

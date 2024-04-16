@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Text, View, TouchableOpacity, StyleSheet, TextInput} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
+//This screen handles adding new addictions
 const NewAddictionScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [date, setDate] = useState(new Date());
@@ -9,6 +10,7 @@ const NewAddictionScreen = ({ navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
 
+  //Function to pass new addiction to Home screen
   const handleAddAddiction = () => {
     const combinedDateTime = new Date(date);
     combinedDateTime.setHours(time.getHours());
@@ -16,6 +18,7 @@ const NewAddictionScreen = ({ navigation }) => {
     navigation.navigate('Home', { addiction: name, date: combinedDateTime.toJSON() });
   };
 
+  //This is called when the date is updated
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
@@ -23,6 +26,7 @@ const NewAddictionScreen = ({ navigation }) => {
     setDate(currentDate);
   };
 
+  //This is called when the time is updated
   const onChangeTime = (event, selectedTime) => {
     if (selectedTime === undefined) {
       setShowTimePicker(false);
@@ -37,12 +41,14 @@ const NewAddictionScreen = ({ navigation }) => {
     setShowDatePicker(true);
   };
 
+  //Helper function to format date into a string
   const formatDateToString = (datetime) => {
     const formattedDate = `${datetime.getDate()}.${datetime.getMonth() + 1}.${datetime.getFullYear()}`;
     const formattedTime = `${datetime.getHours()}:${datetime.getMinutes() < 10 ? '0' : ''}${datetime.getMinutes()}`;
     return `${formattedDate}, ${formattedTime}`;
   };
 
+  //Screen
   return (
     <View style={styles.container}>
 

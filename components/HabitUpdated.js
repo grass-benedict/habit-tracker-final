@@ -34,7 +34,7 @@ const HabitPopup = ({ visible, initialValue, onSubmit, onClose }) => {
     </Modal>
   );
 };
-
+//This modal is executed on long press and is used to delete habits
 const DeleteModal = ({ visible, onClose, onDelete }) => {
   return (
 <Modal
@@ -60,7 +60,7 @@ const DeleteModal = ({ visible, onClose, onDelete }) => {
   );
 };
 
-
+//The updated habit component
 const HabitUpdated = (props) => {
 
   //Destructuring the props object
@@ -69,6 +69,7 @@ const HabitUpdated = (props) => {
   //Modal popup to handle deleting the habit on long press
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
+  //Functions to handle modal visibility and function
   const handleOpenDeleteModal = () => {
     setDeleteModalVisible(true);
   };
@@ -88,6 +89,7 @@ const HabitUpdated = (props) => {
   const [isPopupVisible, setPopupVisible] = useState(false);
 
 
+  //Functions to handle completion popup
   const handleOpenPopup = () => {
     setPopupVisible(true);
   };

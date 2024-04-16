@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const HomeScreen = ( { route, navigation } ) => {
+  //Arrays used to handle storing and deleting items
   const [pendingHabitItems, setPendingHabitItems] = useState([]);
   const [completedHabitItems, setCompletedHabitItems] = useState([]);
   const [addictionItems, setAddictionItems] = useState([]);
@@ -32,14 +33,14 @@ const HomeScreen = ( { route, navigation } ) => {
     }
   }, [route.params?.addiction]);
 
-  //useEffect hook to load pending and completed habits from AsyncStorage into 
-  //Pending habits work fine, completed habits are not loaded properly
+  //useEffect hook to load items from AsyncStorage
   useEffect(() => {
     const loadData = async () => {
       try {
+
         const pendingItems = await AsyncStorage.getItem('pendingHabitItems');
         const completedItems = await AsyncStorage.getItem('completedHabitItems');
-        const addictionItemsData = await AsyncStorage.getItem('addictionItems'); // Retrieve addiction items
+        const addictionItemsData = await AsyncStorage.getItem('addictionItems');
 
         const appOpenedToday = await AsyncStorage.getItem('appOpenedToday');
 
@@ -50,18 +51,20 @@ const HomeScreen = ( { route, navigation } ) => {
         console.log(await AsyncStorage.getItem('pendingItems'));
         console.log(await AsyncStorage.getItem('completedItems'));
   
+        //Fill the arrays if the AsyncStorage is not empty
         if (pendingItems !== null) {
           setPendingHabitItems(JSON.parse(pendingItems));
         }
         if (completedItems !== null) {
           setCompletedHabitItems(JSON.parse(completedItems));
         }
-        if (addictionItemsData !== null) { // Check if addictionItemsData is not null
-          setAddictionItems(JSON.parse(addictionItemsData)); // Set addiction items
+        if (addictionItemsData !== null) { 
+          setAddictionItems(JSON.parse(addictionItemsData));
         }
 
+        //Check if the app is opened for the first time today
+        //If this is the case, reset all habits by moving them to pending
         if (!appOpenedToday || appOpenedToday !== today) {
-          console.log("App opened for the first time today")
           setPendingHabitItems(prevPending => [...prevPending, ...JSON.parse(completedItems)]);
           setCompletedHabitItems([]); // Clear completed habits
           // Update the flag to indicate that the app was opened today
@@ -76,6 +79,7 @@ const HomeScreen = ( { route, navigation } ) => {
     loadData();
   }, []);
   
+  //This hook is used to save data into AsyncStorage whenever something changes
   useEffect(() => {
     const saveData = async () => {
       try {
@@ -107,24 +111,26 @@ const HomeScreen = ( { route, navigation } ) => {
   setAddictionItems(addictionItems => [...addictionItems, newAddiction]);
 } 
 
-  //Placeholder functions for swapping habits between pending and completed
-  //Todo: Make quantifiable habits move automatically when the desired amount is achieved
+  //This function is used to move habits to completed when touched
   const moveHabitToCompleted = (index) => {
     const habitToMove = pendingHabitItems[index];
-    //if (habitToMove.quantity === 1 || (habitToMove.quantity > 1 && habitToMove.completed === habitToMove.quantity)) {
     setPendingHabitItems(pendingHabitItems => pendingHabitItems.filter((_, i) => i !== index));
     setCompletedHabitItems(completedHabitItems => [...completedHabitItems, habitToMove]);   
-    //}
+    
   }
-
+  //This function is used to move habits back to pending when touched
   const moveHabitToPending = (index) => {
     const habitToMove = completedHabitItems[index];
     setCompletedHabitItems(completedHabitItems => completedHabitItems.filter((_, i) => i !== index));
     setPendingHabitItems(pendingHabitItems => [...pendingHabitItems, habitToMove]);  
   }
 
+  /*Known bug: for quantifiable habits, the progress is reset to 0 after passing items to completed
+  In order to fix this, a code refactor is probably needed to handle the state of "completed" in HomeScreen.js
+  instead of in the habit component itself */
 
-  
+
+  //Function to delete habits, called on long press of a habit 
   const deleteHabit = (index, isCompleted) => {
     if (index !== null) {
       if (isCompleted) {
@@ -140,7 +146,7 @@ const HomeScreen = ( { route, navigation } ) => {
       setDeleteModalVisible(false);
     }
   };
-
+  //Same as the function above, except for deleting habits
   const deleteAddiction = (index) => {
     if (index !== null) {
       const newAddictionItems = [...addictionItems];
@@ -152,7 +158,7 @@ const HomeScreen = ( { route, navigation } ) => {
   };
 
 
-
+  //Screen
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator = {false}>
       <Text style = {styles.mainHeading}>Hello, {username}!</Text>
@@ -216,7 +222,7 @@ const HomeScreen = ( { route, navigation } ) => {
 }
 
 //Todo: implement input which is called on first launch of the app
-const username = "Benedict";
+const username = "user";
 
 const styles = StyleSheet.create({
   container: {

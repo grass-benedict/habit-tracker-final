@@ -1,8 +1,7 @@
 import React from 'react'; 
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+//This screen is used to choose between adding a new habit and adding a new addiction
 const AddScreen = ( { navigation } ) => {
     return (
         <View style = {styles.addScreenContainer}>
@@ -31,24 +30,11 @@ const AddScreen = ( { navigation } ) => {
   }
 
 
-//Neues Habit hinzufügen
-function AddHabitScreen(){
-    return (
-      <Text>Hello!</Text>
-    )
-  }
-  
-  //Neue Addiction hinzufügen
-function AddAddictionScreen(){
-  
-}
-
+//Stylesheet
 const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#f0f0f0',
-      //alignItems: 'center',
-      //justifyContent: 'center',
   
     },
     pendingTasksContainer: {

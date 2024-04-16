@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 
+//This Popup is used to adjust the amount achieved
 const DeleteModal = ({ visible, onClose, onDelete }) => {
   return (
 <Modal
@@ -32,13 +33,13 @@ const DeleteModal = ({ visible, onClose, onDelete }) => {
 //based on the startDate object passed as a parameter
 const Addiction = ({ text, initialStartDate, onPress, onDelete }) => {
 
-    //Destructuring the props object
-    //const { text, startDate } = props;
 
 
     //Delete function
     const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
+
+    //Handling delete modal visibility and function
     const handleOpenDeleteModal = () => {
       setDeleteModalVisible(true);
     };
@@ -52,6 +53,7 @@ const Addiction = ({ text, initialStartDate, onPress, onDelete }) => {
       handleCloseDeleteModal();
     };
 
+    //Arrays to store the starting time and elapsed time
     const [elapsedTime, setElapsedTime] = useState(0);
     const [startDate, setStartDate] = useState(initialStartDate || new Date());
 
@@ -82,6 +84,7 @@ const formatTime = (milliseconds) => {
     return digit < 10 ? '0' + digit : digit;
   };
 
+  //Return time of abstinence in a readable format
   return `${days > 0 ? days + 'd ' : ''}${formatDigit(remainingHours)}:${formatDigit(minutes % 60)}:${formatDigit(seconds % 60)}`;
 };
 
